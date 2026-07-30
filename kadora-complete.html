@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KADORA | Сток одяг</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand-green: #2B5737;
+      --brand-green-hover: #1e3f27;
+      --brand-light: #F8F8F7;
+      --brand-card-bg: #FFFFFF;
+      --brand-black: #111111;
+      --text-muted: #777777;
+      --font-main: 'Montserrat', sans-serif;
+      --font-accent: 'Lora', serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: var(--font-main); 
+      background-color: var(--brand-light); 
+      color: var(--brand-black); 
+      line-height: 1.6; 
+      padding-bottom: 80px; 
+    }
+
+    /* Шапка сайту */
+    header {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      padding: 18px 8%; 
+      background-color: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(10px);
+      position: sticky; 
+      top: 0; 
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .logo-container { display: flex; flex-direction: column; }
+    .logo { 
+      font-size: 28px; 
+      font-weight: 700; 
+      letter-spacing: 5px; 
+      color: var(--brand-green); 
+      text-decoration: none;
+      line-height: 1;
+    }
+    .tagline-badge { 
+      font-size: 9px; 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+      color: var(--brand-black);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .header-btns { display: flex; gap: 12px; align-items: center; }
+    .cart-btn, .admin-add-btn {
+      background: transparent; 
+      border: 1px solid var(--brand-black); 
+      color: var(--brand-black);
+      padding: 10px 20px; 
+      border-radius: 40px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      font-size: 13px; 
+      transition: all 0.3s ease;
+    }
+    .admin-add-btn { 
+      background-color: var(--brand-green); 
+      color: #ffffff; 
+      border: none; 
+      box-shadow: 0 4px 12px rgba(43, 87, 55, 0.2);
+    }
+    .admin-add-btn:hover { 
+      background-color: var(--brand-green-hover); 
+      transform: translateY(-1px);
+    }
+    .cart-btn:hover { 
+      background-color: var(--brand-black); 
+      color: #ffffff; 
+    }
+    .cart-badge { 
+      background-color: var(--brand-green); 
+      color: #fff; 
+      font-size: 11px; 
+      padding: 2px 7px; 
+      border-radius: 10px; 
+      margin-left: 4px;
+    }
+
+    /* Герой-секція */
+    .hero { text-align: center; padding: 60px 20px 30px; max-width: 800px; margin: 0 auto; }
+    .hero h1 { font-family: var(--font-accent); font-size: 40px; font-weight: 500; letter-spacing: -0.5px; margin-top: 10px; }
+    .category-title-badge { 
+      background-color: rgba(43, 87, 55, 0.1); 
+      color: var(--brand-green); 
+      font-size: 11px; 
+      font-weight: 700; 
+      letter-spacing: 2px; 
+      padding: 6px 16px; 
+      border-radius: 20px; 
+      display: inline-block; 
+      text-transform: uppercase;
+    }
+
+    /* Сітка товарів */
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+    .products-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+      gap: 30px; 
+      margin-top: 30px; 
+    }
+
+    /* Картка товару */
+    .product-card { 
+      background-color: var(--brand-card-bg); 
+      border-radius: 12px; 
+      overflow: hidden; 
+      border: 1px solid rgba(0, 0, 0, 0.04); 
+      display: flex; 
+      flex-direction: column; 
+      position: relative; 
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+    .stock-tag { 
+      position: absolute; 
+      top: 12px; 
+      left: 12px; 
+      background: rgba(0, 0, 0, 0.8); 
+      backdrop-filter: blur(4px);
+      color: #fff; 
+      font-size: 9px; 
+      font-weight: 700; 
+      letter-spacing: 1px;
+      padding: 4px 8px; 
+      border-radius: 4px; 
+      z-index: 2;
+    }
+    .product-image { 
+      width: 100%; 
+      height: 320px; 
+      object-fit: cover; 
+      background-color: #EAEAEA; 
+    }
+    .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-title { font-family: var(--font-accent); font-size: 19px; font-weight: 600; margin-bottom: 8px; color: var(--brand-black); }
+    .product-price { font-size: 18px; font-weight: 700; color: var(--brand-green); margin-bottom: 16px; }
+    .add-to-cart-btn { 
+      margin-top: auto; 
+      background-color: var(--brand-green); 
+      color: #fff; 
+      border: none; 
+      padding: 12px; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      font-size: 14px;
+      cursor: pointer; 
+      transition: background 0.2s;
+    }
+    .add-to-cart-btn:hover { background-color: var(--brand-black); }
+    .add-to-cart-btn.added { 
+      background-color: var(--brand-black); 
+      pointer-events: none;
+    }
+
+    /* Модальне вікно */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.4); 
+      backdrop-filter: blur(8px);
+      z-index: 1000; 
+      justify-content: center; 
+      align-items: center; 
+      animation: fadeIn 0.2s ease-out;
+      overflow-y: auto;
+    }
+    .modal.active { display: flex; }
+    .modal-content { 
+      background: #fff; 
+      padding: 35px; 
+      border-radius: 16px; 
+      width: 90%; 
+      max-width: 420px; 
+      position: relative; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      margin: 20px auto;
+    }
+    .modal-content h2 { font-family: var(--font-accent); color: var(--brand-black); font-size: 24px; margin-bottom: 20px; }
+    .close-btn { 
+      position: absolute; top: 20px; right: 20px; 
+      background: #F1F1F0; border: none; 
+      width: 32px; height: 32px; border-radius: 50%;
+      font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--text-muted); }
+    .form-group input, .form-group textarea { 
+      width: 100%; padding: 12px 14px; 
+      border: 1px solid #E0E0E0; border-radius: 8px; 
+      font-family: var(--font-main); font-size: 15px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--brand-green); }
+    .file-input { display: none; }
+    .upload-btn {
+      background: #F1F1F0; border: 2px dashed #E0E0E0; padding: 20px; border-radius: 8px;
+      text-align: center; cursor: pointer; transition: all 0.2s;
+    }
+    .upload-btn:hover { border-color: var(--brand-green); background: rgba(43, 87, 55, 0.05); }
+    .upload-btn.has-image { background: rgba(43, 87, 55, 0.1); border-color: var(--brand-green); }
+    .preview-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
+
+    .submit-btn { 
+      width: 100%; background: var(--brand-green); color: #fff; 
+      border: none; padding: 14px; border-radius: 8px; 
+      font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.2s; 
+    }
+    .submit-btn:hover { background: var(--brand-black); }
+    .submit-btn:disabled { background: #CCC; cursor: not-allowed; }
+
+    /* Кошик */
+    .cart-modal-content {
+      max-width: 500px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .cart-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      border-bottom: 1px solid #E0E0E0;
+      align-items: center;
+    }
+    .cart-item-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .cart-item-info {
+      flex: 1;
+    }
+    .cart-item-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .cart-item-price {
+      color: var(--brand-green);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .cart-item-qty {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 14px;
+    }
+    .qty-btn {
+      background: #F1F1F0;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .qty-btn:hover { background: var(--brand-green); color: #fff; }
+    .remove-btn {
+      background: #F1F1F0;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .remove-btn:hover { background: #d9534f; color: #fff; }
+    
+    .cart-summary {
+      padding: 20px;
+      background: #F8F8F7;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    .checkout-btn {
+      width: 100%;
+      background: var(--brand-green);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .checkout-btn:hover { background: var(--brand-green-hover); }
+    .empty-cart {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- Шапка -->
+  <header>
+    <div class="logo-container">
+      <a href="#" class="logo">KADORA</a>
+      <span class="tagline-badge">Сток одяг</span>
+    </div>
+    <div class="header-btns">
+      <button class="admin-add-btn" id="openAddModalBtn">+ Додати товар</button>
+      <button class="cart-btn" id="openCartBtn">🛒 <span class="cart-badge" id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <!-- Герой -->
+  <section class="hero">
+    <span class="category-title-badge">Категорія: СТОК</span>
+    <h1>Брендовий якісний одяг за доступною ціною</h1>
+  </section>
+
+  <!-- Список товарів -->
+  <main class="container">
+    <div class="products-grid" id="productsGrid">
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">Завантаження каталогу...</div>
+    </div>
+  </main>
+
+  <!-- Модальне вікно додавання товару -->
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeAddBtn">&times;</button>
+      <h2>Новий товар</h2>
+      <div id="successMessage"></div>
+      <div class="form-group">
+        <label>Назва товару</label>
+        <input type="text" id="newTitle" placeholder="напр. Худі KADORA Oversize">
+      </div>
+      <div class="form-group">
+        <label>Ціна (грн)</label>
+        <input type="number" id="newPrice" placeholder="напр. 850" min="0">
+      </div>
+      <div class="form-group">
+        <label>Опис</label>
+        <textarea id="newDesc" placeholder="Опишіть товар..." rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Зображення</label>
+        <div class="upload-btn" id="uploadArea">
+          📸 Натисніть або перетягніть зображення
+          <input type="file" id="imageFile" class="file-input" accept="image/*">
+        </div>
+        <img id="previewImg" class="preview-img" style="display:none;">
+      </div>
+      <button class="submit-btn" id="saveProductBtn">Опублікувати товар</button>
+    </div>
+  </div>
+
+  <!-- Модальне вікно кошика -->
+  <div class="modal" id="cartModal">
+    <div class="modal-content cart-modal-content">
+      <button class="close-btn" id="closeCartBtn">&times;</button>
+      <h2>🛒 Ваш кошик</h2>
+      <div id="cartItems"></div>
+      <div id="cartSummary"></div>
+    </div>
+  </div>
+
+  <!-- Скрипт -->
+  <script type="module">
+    // ============ CONFIG ============
+    // Замініть на ваш проектID та датасет
+    const SANITY_CONFIG = {
+      projectId: '7q6t5vcs',
+      dataset: 'production',
+      apiVersion: '2024-01-01'
+    };
+
+    // Токен переміщено на СЕРВЕРНУ ЧАСТИНУ (див. instructions)
+    // const token = 'ВАШ_ТОКЕН_ТУТT';
+
+    let cart = [];
+    let allProducts = [];
+
+    // Збереження кошика
+    function saveCart() {
+    localStorage.setItem("kadora_cart", JSON.stringify(cart));
+}
+
+function loadCart() {
+    const saved = localStorage.getItem("kadora_cart");
+
+    if (saved) {
+        try {
+            cart = JSON.parse(saved);
+        } catch (e) {
+            cart = [];
+        }
+    }
+}
+    // ============ БЕЗПЕЧНЕ ПІДКЛЮЧЕННЯ ============
+    // Замість прямого токену, викликаємо функцію на своєму сервері
+    async function getSanityClient() {
+      try {
+        // Опція 1: Якщо у вас є свій бекенд
+        // const response = await fetch('/api/sanity-token');
+        // const { token } = await response.json();
+
+        // ✅ ВАШЕ ТОКЕН (вставлено для розробки)
+        const token = 'skDxvnrRIVPmuGws75ZNHNW17ruN9qgM8AZfdHocLVvVeUNSvtC6RnZd3NAK0tym1ahgGU77fR18PHZi3fPnasjuajqe1Pgbm48b8DtH7R9WrIp2HwJOH01n3e09YHHWGf5uq9udzXEb89p6EqWtqEozu1wYI5cnxXWpBnsp8nq5nJ2v54aY';
+        
+        if (!token) {
+          console.warn('⚠️ Токен не знайдений.');
+          return null;
+        }
+
+        return {
+          projectId: SANITY_CONFIG.projectId,
+          dataset: SANITY_CONFIG.dataset,
+          token: token,
+          apiVersion: SANITY_CONFIG.apiVersion
+        };
+      } catch (e) {
+        console.error('Помилка отримання токену:', e);
+        return null;
+      }
+    }
+
+    // ============ ЗАВАНТАЖЕННЯ ТОВАРІВ ============
+    async function loadProducts() {
+      const grid = document.getElementById('productsGrid');
+      try {
+        const url = `https://${SANITY_CONFIG.projectId}.api.sanity.io/v${SANITY_CONFIG.apiVersion}/data/query/${SANITY_CONFIG.dataset}?query=*[_type == "product"] | order(_createdAt desc) {_id, title, price, description, "imageUrl": image.asset->url}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        const products = data.result || [];
+        
+        allProducts = products;
+
+        if (!products.length) {
+          grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">📦 Товарів поки немає. Натисніть "+ Додати товар" зверху!</div>';
+          return;
+        }
+
+        grid.innerHTML = products.map(p => `
+  <div class="product-card">
+    <div class="stock-tag">STOCK</div>
+
+    <img
+      class="product-image"
+      src="${p.imageUrl || ''}"
+      alt="${p.title}"
+      onerror="this.style.display='none'"
+    >
+
+    <div class="product-info">
+      <div class="product-title">${p.title || 'Стоковий товар'}</div>
+      <div class="product-price">${p.price || 0} грн</div>
+
+      <button class="add-to-cart-btn" data-product-id="${p._id}">
+        У кошик
+      </button>
+    </div>
+  </div>
+`).join('');
+        // Додаємо слухачі на кнопки
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => addToCart(e.target.dataset.productId));
+        });
+
+      } catch (e) {
+        console.error('Помилка:', e);
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #d9534f; padding: 20px;">
+          <b>Не вдалося завантажити товари.</b><br>
+          ${e.message}
+        </div>`;
+      }
+    }
+
+    // ============ КОШИК ============
+    function addToCart(productId) {
+      const product = allProducts.find(p => p._id === productId);
+      if (!product) return;
+
+      const existingItem = cart.find(item => item._id === productId);
+      if (existingItem) {
+        existingItem.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+
+      updateCartUI();
+      showSuccessMessage('✓ Додано в кошик');
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item._id !== productId);
+      updateCartUI();
+    }
+
+    function updateQty(productId, newQty) {
+      if (newQty < 1) {
+        removeFromCart(productId);
+        return;
+      }
+      const item = cart.find(p => p._id === productId);
+      if (item) item.qty = newQty;
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+
+    document.getElementById("cartCount").textContent = count;
+
+    saveCart();
+    renderCart();
+}
+    function renderCart() {
+      const container = document.getElementById('cartItems');
+      const summary = document.getElementById('cartSummary');
+
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="empty-cart">Кошик порожній 🛒</div>';
+        summary.innerHTML = '';
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+      container.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.imageUrl || ""}" class="cart-item-img" alt="${item.title}">
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-price">${item.price} грн × ${item.qty}</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="window.updateQty('${item._id}', ${item.qty - 1})">−</button>
+              <span>${item.qty}</span>
+              <button class="qty-btn" onclick="window.updateQty('${item._id}', ${item.qty + 1})">+</button>
+              <button class="remove-btn" onclick="window.removeFromCart('${item._id}')">Видалити</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      summary.innerHTML = `
+        <div class="cart-summary">
+          <div class="cart-total">
+            <span>Усього:</span>
+            <span>${total} грн</span>
+          </div>
+          <button class="checkout-btn" onclick="checkout()">
+            🛒 Оформити замовлення
+          </button>
+        </div>
+      `;
+    }
+
+    // ============ ДОДАВАННЯ ТОВАРУ ============
+    async function saveProduct() {
+      const title = document.getElementById('newTitle').value.trim();
+      const price = parseInt(document.getElementById('newPrice').value);
+      const description = document.getElementById('newDesc').value.trim();
+      
+      const imageFileInput = document.getElementById('imageFile');
+      const imageFile = imageFileInput ? imageFileInput.files[0] : null;
+
+      if (!title || !price) {
+        alert('Заповніть назву та ціну!');
+        return;
+      }
+
+      const btn = document.getElementById('saveProductBtn');
+      btn.innerText = 'Опублікування...';
+      btn.disabled = true;
+
+      try {
+        const clientConfig = await getSanityClient();
+        if (!clientConfig) {
+          alert('Помилка: Токен недоступний. Налаштуйте безпечне підключення.');
+          btn.disabled = false;
+          return;
+        }
+
+        let imageAssetId = null;
+
+        // Завантажити зображення
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append('file', imageFile);
+
+          const uploadRes = await fetch(
+            `https://${SANITY_CONFIG.projectId}.api.sanity.io/v2021-06-07/assets/images/${SANITY_CONFIG.dataset}`,
+            {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${clientConfig.token}` },
+              body: formData
+            }
+          );
+
+          if (!uploadRes.ok) throw new Error('Помилка завантаження зображення');
+          const uploadData = await uploadRes.json();
+          imageAssetId = uploadData.document._id;
+        }
+
+        // Створити товар
+        const productData = {
+          _type: 'product',
+          title: title,
+          price: price,
+          description: description
+        };
+
+        if (imageAssetId) {
+          productData.image = {
+            _type: 'image',
+            asset: { _type: 'reference', _ref: imageAssetId }
+          };
+        }
+
+        const createRes = await fetch(
+          `https://${SANITY_CONFIG.projectId}.api.sanity.io/v${SANITY_CONFIG.apiVersion}/data/mutate/${SANITY_CONFIG.dataset}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${clientConfig.token}`
+            },
+            body: JSON.stringify({ mutations: [{ create: productData }] })
+          }
+        );
+
+        if (!createRes.ok) throw new Error('Помилка створення товару');
+
+        document.getElementById('successMessage').innerHTML = '🎉 Товар успішно додано!';
+        setTimeout(() => {
+          document.getElementById('addModal').classList.remove('active');
+          document.getElementById('newTitle').value = '';
+          document.getElementById('newPrice').value = '';
+          document.getElementById('newDesc').value = '';
+          document.getElementById('imageFile').value = '';
+          document.getElementById('previewImg').style.display = 'none';
+          document.getElementById('uploadArea').classList.remove('has-image');
+          document.getElementById('successMessage').innerHTML = '';
+          loadProducts();
+        }, 1500);
+
+      } catch (err) {
+        console.error('Помилка:', err);
+        alert('❌ Помилка: ' + err.message);
+      } finally {
+        btn.innerText = 'Опублікувати товар';
+        btn.disabled = false;
+      }
+    }
+
+    function showSuccessMessage(text) {
+      const msg = document.createElement('div');
+      msg.className = 'success-message';
+      msg.textContent = text;
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 2000);
+    }
+
+    // ============ ЗАВАНТАЖЕННЯ ЗОБРАЖЕНЬ ============
+    const uploadArea = document.getElementById('uploadArea');
+    const imageFile = document.getElementById('imageFile');
+
+    uploadArea.addEventListener('click', () => imageFile.click());
+
+    imageFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const preview = document.getElementById('previewImg');
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          uploadArea.classList.add('has-image');
+          uploadArea.textContent = '✓ Зображення вибрано';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // ============ СОБЫТИЯ ============
+    document.getElementById('openAddModalBtn').onclick = () => {
+      document.getElementById('addModal').classList.add('active');
+    };
+    document.getElementById('closeAddBtn').onclick = () => {
+      document.getElementById('addModal').classList.remove('active');
+    };
+    document.getElementById('openCartBtn').onclick = () => {
+      document.getElementById('cartModal').classList.add('active');
+    };
+    document.getElementById('closeCartBtn').onclick = () => {
+      document.getElementById('cartModal').classList.remove('active');
+    };
+    document.getElementById('saveProductBtn').onclick = saveProduct;
+
+    // Expose functions globally for cart buttons
+    window.removeFromCart = removeFromCart;
+    window.updateQty = updateQty;
+    function checkout() {
+
+if (cart.length === 0) {
+    alert("Ваш кошик порожній!");
+    return;
+}
+
+let text = "🛒 НОВЕ ЗАМОВЛЕННЯ KADORA\n\n";
+
+cart.forEach(item => {
+    text += `${item.title}\n`;
+    text += `Кількість: ${item.qty}\n`;
+    text += `Ціна: ${item.price} грн\n\n`;
+});
+
+const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+text += "Разом: " + total + " грн";
+
+window.open(
+    "https://t.me/NazarNikolaichuk?text=" +
+    encodeURIComponent(text),
+    "_blank"
+);
+
+cart = [];
+updateCartUI();
+    }
+    
+    window.checkout = checkout;
+
+loadCart();
+loadProducts();
+updateCartUI();
+  </script>
+</body>
+</html>
