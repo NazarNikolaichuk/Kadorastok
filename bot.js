@@ -52,6 +52,8 @@ bot.onText(/\/start/, (msg) => {
 
 // ─── ГОЛОВНІ КОМАНДИ ───
 bot.on('message', async (msg) => {
+  console.log("Отримано повідомлення:", msg.text);
+  console.log("Telegram ID:", msg.from.id);
   const chatId = msg.chat.id;
   const text = msg.text;
 
