@@ -653,8 +653,8 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     // ⬇️ ЗАМІНИ ЦІ ДВА РЯДКИ НА СВОЇ ДАНІ З SUPABASE
-    const SUPABASE_URL = 'https://ТВІЙ_ПРОЄКТ.supabase.co';
-    const SUPABASE_ANON_KEY = 'ТВІЙ_ANON_KEY';
+    const SUPABASE_URL = 'https://bhqampawhwhztfvkugrt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_ndy0u8-eCo73bueiYcLzTg_rlPcUlho';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -809,7 +809,7 @@
     document.getElementById('drawerOverlay').onclick = closeCart;
     document.getElementById('checkoutBtn').onclick = () => {
       if (!cart.length) return showToast('Кошик порожній');
-      showToast('Дякуємо! Скоро зв'яжемось з вами');
+      showToast('Дякуємо! Скоро звяжемось з вами');
       cart = [];
       updateCartUI();
       closeCart();
