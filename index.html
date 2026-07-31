@@ -42,6 +42,7 @@
       display: flex; align-items: center; justify-content: space-between;
       height: 72px;
     }
+
     .logo-block { display: flex; flex-direction: column; gap: 2px; }
     .logo { font-family: var(--font-main); font-size: 26px; font-weight: 700; letter-spacing: 5px; color: var(--green); line-height: 1; }
     .logo-sub {
@@ -611,7 +612,7 @@
       <div class="footer-logo">KADORA</div>
       <div class="footer-tagline">Новий та вживаний одяг</div>
       <div class="footer-socials">
-        <г href="#" class="footer-social">Instagram</a>
+        <a href="#" class="footer-social">Instagram</a>
         <a href="#" class="footer-social">Telegram</a>
         <a href="#" class="footer-social">Facebook</a>
       </div>
@@ -639,43 +640,46 @@
     <div class="footer-col">
       <h4>Контакти</h4>
       <ul>
-        <li><a href="#">+38 (097) 780-29-61</a></li>
+        <li><a href="#">+38 (0XX) XXX-XX-XX</a></li>
         <li><a href="#">Telegram-чат</a></li>
         <li><a href="#">kadora@email.com</a></li>
-        <li><a href="#">Пн–Сб: 9:00–19:00</a></li>
+        <li><a href="#">Пн–Сб: 9:00–20:00</a></li>
       </ul>
     </div>
   </footer>
   <div class="footer-bottom">© 2025 KADORA. Всі права захищені.</div>
 
-  <script>
-    // ─── PRODUCT DATA ───
-    const PRODUCTS = [
-      { id:1, brand:'Zara', title:'Сорочка оверсайз', size:'M / L', price:850, oldPrice:2200, type:'stock', category:'tops', color:'green', img:'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=520&fit=crop' },
-      { id:2, brand:'H&M', title:'Джинси прямого крою', size:'38 / M', price:650, oldPrice:1800, type:'used', category:'jeans', color:'blue', img:'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=520&fit=crop' },
-      { id:3, brand:'Mango', title:'Сукня міді в квіти', size:'S / 36', price:1100, oldPrice:null, type:'new', category:'dresses', color:'pink', img:'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=520&fit=crop' },
-      { id:4, brand:'Reserved', title:'Вовняне пальто', size:'M / 40', price:2400, oldPrice:5500, type:'stock', category:'outerwear', color:'beige', img:'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=400&h=520&fit=crop' },
-      { id:5, brand:'Bershka', title:'Топ рубчик', size:'XS / S', price:320, oldPrice:750, type:'stock', category:'tops', color:'black', img:'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&h=520&fit=crop' },
-      { id:6, brand:'H&M', title:'Светр оверсайз', size:'L / XL', price:780, oldPrice:null, type:'new', category:'knitwear', color:'gray', img:'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=520&fit=crop' },
-      { id:7, brand:'Zara', title:'Блейзер класичний', size:'M / 40', price:1350, oldPrice:3200, type:'used', category:'outerwear', color:'black', img:'https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=400&h=520&fit=crop' },
-      { id:8, brand:'Mango', title:'Брюки palazzo', size:'S / 36', price:890, oldPrice:2100, type:'used', category:'jeans', color:'beige', img:'https://images.unsplash.com/photo-1594938298603-c8148c4b1c9e?w=400&h=520&fit=crop' },
-      { id:9, brand:'H&M', title:'Сукня міні чорна', size:'XS / 34', price:560, oldPrice:null, type:'new', category:'dresses', color:'black', img:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=520&fit=crop' },
-      { id:10, brand:'Zara', title:'Жилет стьобаний', size:'M / L', price:950, oldPrice:2400, type:'stock', category:'outerwear', color:'black', img:'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=520&fit=crop' },
-      { id:11, brand:'Reserved', title:'Кардиган обємний', size:'L / 42', price:720, oldPrice:1600, type:'used', category:'knitwear', color:'beige', img:'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=400&h=520&fit=crop' },
-      { id:12, brand:'Bershka', title:'Штани карго', size:'S / M', price:680, oldPrice:1400, type:'used', category:'jeans', color:'green', img:'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&h=520&fit=crop' },
-      { id:13, brand:'H&M', title:'Блуза шовкова', size:'S / 36', price:430, oldPrice:1100, type:'stock', category:'tops', color:'pink', img:'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=520&fit=crop' },
-      { id:14, brand:'Zara', title:'Шкіряна куртка', size:'M / 38', price:3200, oldPrice:7800, type:'used', category:'outerwear', color:'black', img:'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=520&fit=crop' },
-      { id:15, brand:'Mango', title:'Сукня-сорочка', size:'M / 40', price:990, oldPrice:2300, type:'new', category:'dresses', color:'beige', img:'https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?w=400&h=520&fit=crop' },
-      { id:16, brand:'Bershka', title:'Худі crop', size:'XS / S', price:490, oldPrice:1100, type:'stock', category:'tops', color:'gray', img:'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&h=520&fit=crop' },
-      { id:17, brand:'H&M', title:'Трикотажне плаття', size:'M / L', price:840, oldPrice:null, type:'new', category:'dresses', color:'gray', img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=520&fit=crop' },
-      { id:18, brand:'Reserved', title:'Пальто оверсайз', size:'XL / 44', price:2800, oldPrice:6200, type:'stock', category:'outerwear', color:'beige', img:'https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=400&h=520&fit=crop' },
-      { id:19, brand:'Zara', title:'Джинси скіні', size:'36 / XS', price:590, oldPrice:1700, type:'used', category:'jeans', color:'blue', img:'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=520&fit=crop' },
-      { id:20, brand:'Mango', title:'Туніка лляна', size:'S / M', price:680, oldPrice:null, type:'new', category:'tops', color:'white', img:'https://images.unsplash.com/photo-1562572159-4efc207f5aff?w=400&h=520&fit=crop' },
-      { id:21, brand:'H&M', title:'Спортивний костюм', size:'M / L', price:1100, oldPrice:2800, type:'stock', category:'women', color:'gray', img:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=520&fit=crop' },
-      { id:22, brand:'Bershka', title:'Сумка шопер', size:'One size', price:350, oldPrice:800, type:'used', category:'accessories', color:'black', img:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=520&fit=crop' },
-      { id:23, brand:'Zara', title:'Ремінь шкіряний', size:'S / M', price:280, oldPrice:700, type:'used', category:'accessories', color:'black', img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=520&fit=crop' },
-      { id:24, brand:'Reserved', title:'Пуловер базовий', size:'L / XL', price:560, oldPrice:1300, type:'used', category:'knitwear', color:'beige', img:'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=520&fit=crop' },
-    ];
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // ⬇️ ЗАМІНИ ЦІ ДВА РЯДКИ НА СВОЇ ДАНІ З SUPABASE
+    const SUPABASE_URL = 'https://ТВІЙ_ПРОЄКТ.supabase.co';
+    const SUPABASE_ANON_KEY = 'ТВІЙ_ANON_KEY';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Завантажуємо товари з Supabase
+    async function fetchProducts() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) { console.error(error); return []; }
+      return data.map(p => ({
+        id: p.id,
+        brand: p.brand || '',
+        title: p.title,
+        size: p.size || '',
+        price: p.price,
+        oldPrice: p.old_price || null,
+        type: p.type || 'stock',
+        category: p.category || 'other',
+        color: 'black',
+        img: p.img || 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&h=520&fit=crop',
+      }));
+    }
+
+    let PRODUCTS = [];
 
     const BADGE_MAP = { stock: { cls: 'badge-stock', label: 'СТОК' }, new: { cls: 'badge-new', label: 'НОВИЙ' }, used: { cls: 'badge-used', label: 'ВЖИВ.' } };
 
@@ -805,7 +809,7 @@
     document.getElementById('drawerOverlay').onclick = closeCart;
     document.getElementById('checkoutBtn').onclick = () => {
       if (!cart.length) return showToast('Кошик порожній');
-      showToast('Дякуємо! Скоро звяжемось з вами');
+      showToast('Дякуємо! Скоро зв'яжемось з вами');
       cart = [];
       updateCartUI();
       closeCart();
@@ -860,7 +864,17 @@
     document.getElementById('sortSelect').onchange = (e) => { sortVal = e.target.value; renderProducts(); };
 
     // ─── INIT ───
-    renderProducts();
+    (async () => {
+      document.getElementById('productsGrid').innerHTML =
+        '<div class="state-box"><div class="state-icon">⏳</div><div class="state-title">Завантаження товарів...</div></div>';
+      PRODUCTS = await fetchProducts();
+      if (!PRODUCTS.length) {
+        document.getElementById('productsGrid').innerHTML =
+          '<div class="state-box"><div class="state-icon">📦</div><div class="state-title">Товарів поки немає</div><div class="state-desc">Додай перший товар через Telegram бот</div></div>';
+        return;
+      }
+      renderProducts();
+    })();
   </script>
 </body>
 </html>
