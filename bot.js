@@ -3,13 +3,10 @@ const { createClient } = require('@supabase/supabase-js');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
-const bot = new TelegramBot('8776687351:AAFLkLmYaI491F2XjTv6BPB2YDRovYZnVhE', { polling: true });
-const supabase = createClient(
-  'https://bhqampawhwhztfvkugrt.supabase.co',
-  'YOUR_SUPABASE_SERVICE_ROLE_KEY'
-);
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-const ADMIN_ID = NazarNikolaichuk;
+const ADMIN_ID = Number(process.env.ADMIN_TELEGRAM_ID);
 
 // Стан сесій для кожного користувача
 const sessions = {};
