@@ -361,6 +361,14 @@
       cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s;
     }
     .checkout-btn:hover { background: var(--green-dark); }
+    .checkout-btn:disabled { background: var(--gray-light); cursor: not-allowed; }
+    .order-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .order-input {
+      width: 100%; padding: 10px 12px; border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 8px; font-family: var(--font-main); font-size: 13px;
+      background: var(--cream); transition: border-color 0.2s;
+    }
+    .order-input:focus { outline: none; border-color: var(--green); background: var(--white); }
 
     /* ─── TOAST ─── */
     .toast {
@@ -599,7 +607,12 @@
         <span class="cart-total-label">Разом</span>
         <span class="cart-total-price" id="cartTotal">0 грн</span>
       </div>
-      <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
+      <div class="order-form">
+        <input class="order-input" type="text" id="orderName" placeholder="Ваше імʼя *">
+        <input class="order-input" type="tel" id="orderPhone" placeholder="Телефон * (+380...)">
+        <input class="order-input" type="text" id="orderAddress" placeholder="Місто, відділення НП *">
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">📦 Оформити замовлення</button>
     </div>
   </div>
 
@@ -807,12 +820,58 @@
     }
     document.getElementById('closeCartBtn').onclick = closeCart;
     document.getElementById('drawerOverlay').onclick = closeCart;
-    document.getElementById('checkoutBtn').onclick = () => {
+    // ⬇️ ВСТАВ СВОЇ ДАНІ
+    const TG_BOT_TOKEN = 'ТВІЙ_BOT_TOKEN';
+    const TG_CHAT_ID = 'ТВІЙ_TELEGRAM_ID';
+
+    document.getElementById('checkoutBtn').onclick = async () => {
       if (!cart.length) return showToast('Кошик порожній');
-      showToast('Дякуємо! Скоро звяжемось з вами');
-      cart = [];
-      updateCartUI();
-      closeCart();
+
+      const name = document.getElementById('orderName').value.trim();
+      const phone = document.getElementById('orderPhone').value.trim();
+      const address = document.getElementById('orderAddress').value.trim();
+
+      if (!name) return showToast('❗ Введіть ваше імʼя');
+      if (!phone) return showToast('❗ Введіть номер телефону');
+      if (!address) return showToast('❗ Введіть адресу доставки');
+
+      const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+      const itemsList = cart
+        .map(x => `  • ${x.brand} ${x.title} (${x.size}) × ${x.qty} — ${(x.price * x.qty).toLocaleString('uk-UA')} грн`)
+        .join('\n');
+
+      const message =
+        `🛍 *НОВЕ ЗАМОВЛЕННЯ — KADORA*\n\n` +
+        `👤 Імʼя: ${name}\n` +
+        `📞 Телефон: ${phone}\n` +
+        `📦 Адреса: ${address}\n\n` +
+        `🧾 *Товари:*\n${itemsList}\n\n` +
+        `💰 *Разом: ${total.toLocaleString('uk-UA')} грн*`;
+
+      const btn = document.getElementById('checkoutBtn');
+      btn.textContent = '⏳ Відправляємо...';
+      btn.disabled = true;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: message, parse_mode: 'Markdown' })
+        });
+
+        showToast('✅ Замовлення прийнято! Скоро зателефонуємо');
+        cart = [];
+        updateCartUI();
+        document.getElementById('orderName').value = '';
+        document.getElementById('orderPhone').value = '';
+        document.getElementById('orderAddress').value = '';
+        closeCart();
+      } catch (e) {
+        showToast('❌ Помилка. Спробуйте ще раз');
+      } finally {
+        btn.textContent = '📦 Оформити замовлення';
+        btn.disabled = false;
+      }
     };
 
     // ─── TABS ───
