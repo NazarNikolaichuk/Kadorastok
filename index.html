@@ -757,14 +757,16 @@
 
     // ─── WISHLIST ───
     function toggleLike(id, btn) {
-      if (liked.has(id)) { liked.delete(id); btn.textContent = '🤍'; btn.classList.remove('liked'); }
-      else { liked.add(id); btn.textContent = '❤️'; btn.classList.add('liked'); }
+      const key = String(id);
+      if (liked.has(key)) { liked.delete(key); btn.textContent = '🤍'; btn.classList.remove('liked'); }
+      else { liked.add(key); btn.textContent = '❤️'; btn.classList.add('liked'); }
     }
 
     // ─── CART ───
     function addToCart(id) {
-      const p = PRODUCTS.find(x => x.id === id);
-      const existing = cart.find(x => x.id === id);
+      const p = PRODUCTS.find(x => String(x.id) === String(id));
+      if (!p) return;
+      const existing = cart.find(x => String(x.id) === String(id));
       if (existing) existing.qty++;
       else cart.push({ ...p, qty: 1 });
       updateCartUI();
@@ -798,7 +800,7 @@
     }
 
     function removeFromCart(id) {
-      cart = cart.filter(x => x.id !== id);
+      cart = cart.filter(x => String(x.id) !== String(id));
       updateCartUI();
     }
 
