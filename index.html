@@ -672,8 +672,9 @@
     // ════════════════════════════════════════
     var SUPABASE_URL  = 'https://bhqampawhwhztfvkugrt.supabase.co';
     var SUPABASE_KEY  = 'sb_publishable_ndy0u8-eCo73bueiYcLzTg_rlPcUlho';
-    var TG_BOT_TOKEN  = '8776687351:AAFLkLmYaI491F2XjTv6BPB2YDRovYZnVhE';   // токен від @BotFather
-    var TG_CHAT_ID    = '1734233859'; // число з @userinfobot
+    // ⬇️ ВСТАВ URL СВОГО БОТ-СЕРВЕРА З RENDER
+    // Виглядає так: https://kadora-bot.onrender.com
+    var BOT_SERVER_URL = 'https://kadora-bot.onrender.com';
     // ════════════════════════════════════════
 
     var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -845,7 +846,6 @@
     document.getElementById('closeCartBtn').onclick = closeCart;
     document.getElementById('drawerOverlay').onclick = closeCart;
 
-
     // ── Оформлення замовлення → Telegram ─────
     document.getElementById('checkoutBtn').onclick = async function() {
       if (!cart.length) return showToast('Кошик порожній');
@@ -860,28 +860,27 @@
 
       var total = 0;
       cart.forEach(function(x){ total += x.price * x.qty; });
-      var items = cart.map(function(x){
-        return '  • ' + x.brand + ' ' + x.title + ' (' + x.size + ') × ' + x.qty + ' — ' + (x.price * x.qty).toLocaleString('uk-UA') + ' грн';
-      }).join('\n');
 
-      var msg = '🛍 *НОВЕ ЗАМОВЛЕННЯ — KADORA*\n\n' +
-        '👤 Імʼя: ' + name + '\n' +
-        '📞 Телефон: ' + phone + '\n' +
-        '📦 Адреса: ' + address + '\n\n' +
-        '🧾 *Товари:*\n' + items + '\n\n' +
-        '💰 *Разом: ' + total.toLocaleString('uk-UA') + ' грн*';
+      var orderData = {
+        name: name,
+        phone: phone,
+        address: address,
+        total: total,
+        items: cart.map(function(x) {
+          return { id: x.id, brand: x.brand, title: x.title, size: x.size, qty: x.qty, price: x.price };
+        })
+      };
 
       var btn = document.getElementById('checkoutBtn');
       btn.textContent = '⏳ Відправляємо...';
       btn.disabled = true;
 
       try {
-        await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage', {
+        await fetch(BOT_SERVER_URL + '/order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+          body: JSON.stringify(orderData)
         });
-
         showToast('✅ Замовлення прийнято! Скоро зателефонуємо');
         cart = [];
         updateCartUI();
