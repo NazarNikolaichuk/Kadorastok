@@ -98,10 +98,16 @@ bot.on('message', async (msg) => {
   if (session.step === 'photo') {
     if (msg.photo) {
       const fileId = msg.photo[msg.photo.length - 1].file_id;
-      const fileUrl = await getFileUrl(fileId);
-      sessions[chatId].photoUrl = fileUrl;
-      sessions[chatId].step = 'title';
-      return bot.sendMessage(chatId, '✅ Фото отримано!\n\n📝 Введи *назву товару*:', { parse_mode: 'Markdown', ...cancelKeyboard() });
+      await bot.sendMessage(chatId, '⏳ Завантажую фото...');
+      try {
+        const permanentUrl = await uploadPhotoToSupabase(fileId);
+        sessions[chatId].photoUrl = permanentUrl;
+        sessions[chatId].step = 'title';
+        return bot.sendMessage(chatId, '✅ Фото збережено!\n\n📝 Введи *назву товару*:', { parse_mode: 'Markdown', ...cancelKeyboard() });
+      } catch (e) {
+        console.error(e);
+        return bot.sendMessage(chatId, '❌ Помилка завантаження фото. Спробуй ще раз.', cancelKeyboard());
+      }
     }
     return bot.sendMessage(chatId, '❗ Надішли саме *фото*, не файл.', { parse_mode: 'Markdown' });
   }
@@ -278,9 +284,28 @@ server.listen(PORT, () => {
   console.log(`🤖 KADORA Bot запущено. HTTP сервер на порту ${PORT}`);
 });
 
-// ─── ОТРИМАТИ URL ФОТО ───
-async function getFileUrl(fileId) {
-  const res = await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/getFile?file_id=${fileId}`);
-  const json = await res.json();
-  return `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${json.result.file_path}`;
+// ─── ЗАВАНТАЖЕННЯ ФОТО В SUPABASE STORAGE ───
+async function uploadPhotoToSupabase(fileId) {
+  // 1. Отримуємо тимчасовий URL від Telegram
+  const infoRes = await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/getFile?file_id=${fileId}`);
+  const infoJson = await infoRes.json();
+  const tgUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${infoJson.result.file_path}`;
+
+  // 2. Завантажуємо фото як буфер
+  const imgRes = await fetch(tgUrl);
+  const buffer = await imgRes.buffer();
+
+  // 3. Унікальне ім'я файлу
+  const fileName = `product_${Date.now()}.jpg`;
+
+  // 4. Завантажуємо в Supabase Storage (bucket "products")
+  const { error } = await supabase.storage
+    .from('products')
+    .upload(fileName, buffer, { contentType: 'image/jpeg', upsert: false });
+
+  if (error) throw error;
+
+  // 5. Повертаємо публічний URL (постійний!)
+  const { data } = supabase.storage.from('products').getPublicUrl(fileName);
+  return data.publicUrl;
 }
