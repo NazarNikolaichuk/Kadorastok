@@ -264,6 +264,27 @@
     }
     .product-card:hover .product-image { transform: scale(1.03); }
 
+    /* Галерея */
+    .gallery-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.85); border: none; border-radius: 50%;
+      width: 28px; height: 28px; cursor: pointer; font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s; z-index: 3;
+    }
+    .product-card:hover .gallery-nav { opacity: 1; }
+    .gallery-prev { left: 8px; }
+    .gallery-next { right: 8px; }
+    .gallery-dots {
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 4px; z-index: 3;
+    }
+    .gallery-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.6); transition: background 0.2s;
+    }
+    .gallery-dot.active { background: var(--white); }
+
     .card-quick-view {
       position: absolute; bottom: 0; left: 0; right: 0;
       background: rgba(43,87,55,0.92); color: var(--white);
@@ -420,6 +441,46 @@
       .catalog-area { padding: 20px 16px; }
       footer { grid-template-columns: 1fr; }
     }
+
+    /* ─── ТЕМНА ТЕМА ─── */
+    body.dark {
+      background-color: #111;
+      color: #f0f0f0;
+    }
+    body.dark header { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
+    body.dark .logo { color: #5a9e6f; }
+    body.dark .logo-sub { color: #5a9e6f; border-color: #5a9e6f; }
+    body.dark nav a { color: #ccc; }
+    body.dark nav a:hover, body.dark nav a.active { color: #5a9e6f; border-bottom-color: #5a9e6f; }
+    body.dark .filter-bar { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
+    body.dark .filter-tab { color: #888; }
+    body.dark .filter-tab.active { color: #5a9e6f; border-bottom-color: #5a9e6f; }
+    body.dark .sort-select { background: #222; color: #f0f0f0; border-color: rgba(255,255,255,0.15); }
+    body.dark .sidebar { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
+    body.dark .sidebar-list button { color: #ccc; }
+    body.dark .sidebar-list button:hover { background: #2a2a2a; }
+    body.dark .sidebar-list button.active { background: #1e3f27; color: #5a9e6f; }
+    body.dark .size-btn { background: #2a2a2a; color: #ccc; }
+    body.dark .size-btn.active { background: #2B5737; color: #fff; }
+    body.dark .price-input { background: #222; color: #f0f0f0; border-color: rgba(255,255,255,0.15); }
+    body.dark .product-card { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
+    body.dark .product-title { color: #f0f0f0; }
+    body.dark .product-brand { color: #888; }
+    body.dark .product-size { color: #888; }
+    body.dark .cart-drawer { background: #1a1a1a; }
+    body.dark .drawer-title { color: #f0f0f0; }
+    body.dark .cart-item-title { color: #f0f0f0; }
+    body.dark .order-input { background: #222; color: #f0f0f0; border-color: rgba(255,255,255,0.15); }
+    body.dark .results-count { color: #888; }
+
+    .theme-btn {
+      background: none; border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 30px; padding: 7px 14px; cursor: pointer;
+      font-size: 16px; transition: all 0.2s; line-height: 1;
+    }
+    body.dark .theme-btn { border-color: rgba(255,255,255,0.2); }
+    .theme-btn:hover { background: var(--cream); }
+    body.dark .theme-btn:hover { background: #2a2a2a; }
   </style>
 </head>
 <body>
@@ -438,6 +499,7 @@
       <a href="#" data-cat="sale">Sale</a>
     </nav>
     <div class="header-right">
+      <button class="theme-btn" id="themeBtn" title="Змінити тему">🌙</button>
       <button class="cart-btn" id="openCartBtn">
         🛒 Кошик <span class="cart-badge" id="cartCount">0</span>
       </button>
@@ -560,24 +622,22 @@
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-title">Ціна (грн)</div>
-        <div class="price-range">
-          <input class="price-input" type="number" placeholder="від" id="priceMin" value="0">
-          <input class="price-input" type="number" placeholder="до" id="priceMax" value="500">
-        </div>
-        <button class="apply-btn" id="applyFilter">Застосувати</button>
+        <div class="sidebar-title">Стать</div>
+        <ul class="sidebar-list" id="genderFilter">
+          <li><button class="active" data-gender="all">Всі</button></li>
+          <li><button data-gender="women">👩 Жіноче</button></li>
+          <li><button data-gender="men">👨 Чоловіче</button></li>
+          <li><button data-gender="unisex">👕 Унісекс</button></li>
+        </ul>
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-title">Бренд</div>
-        <ul class="sidebar-list">
-          <li><button data-brand="zara">Zara <span class="sidebar-count"></span></button></li>
-          <li><button data-brand="hm">H&M <span class="sidebar-count"></span></button></li>
-          <li><button data-brand="mango">Mango <span class="sidebar-count"></span></button></li>
-          <li><button data-brand="reserved">Reserved <span class="sidebar-count"></span></button></li>
-          <li><button data-brand="bershka">Bershka <span class="sidebar-count"></span></button></li>
-          <li><button data-brand="other">Інші <span class="sidebar-count"></span></button></li>
-        </ul>
+        <div class="sidebar-title">Ціна (грн)</div>
+        <div class="price-range">
+          <input class="price-input" type="number" placeholder="від" id="priceMin">
+          <input class="price-input" type="number" placeholder="до" id="priceMax">
+        </div>
+        <button class="apply-btn" id="applyFilter">Застосувати</button>
       </div>
     </aside>
 
@@ -684,6 +744,9 @@
     var liked     = {};
     var activeTab  = 'all';
     var activeType = 'all';
+    var activeGender = 'all';
+    var priceMin   = null;
+    var priceMax   = null;
     var sortVal    = 'default';
 
     var BADGE = {
@@ -691,6 +754,28 @@
       new:   { cls: 'badge-new',   label: 'НОВИЙ' },
       used:  { cls: 'badge-used',  label: 'ВЖИВ.' }
     };
+
+    // ── Галерея ───────────────────────────────
+    var galleryIndex = {};
+
+    function galleryGo(id, dir, e) {
+      if (e) e.stopPropagation();
+      var p = PRODUCTS.find(function(x){ return x.id === id; });
+      if (!p || !p.images || p.images.length < 2) return;
+      if (!galleryIndex[id]) galleryIndex[id] = 0;
+      galleryIndex[id] = (galleryIndex[id] + dir + p.images.length) % p.images.length;
+      var img = document.getElementById('img-' + id);
+      if (img) img.src = p.images[galleryIndex[id]];
+      // оновити крапки
+      var card = document.querySelector('[data-id="' + id + '"]');
+      if (card) {
+        var dots = card.querySelectorAll('.gallery-dot');
+        dots.forEach(function(d, i){ d.classList.toggle('active', i === galleryIndex[id]); });
+      }
+    }
+
+    function galleryPrev(id, e) { galleryGo(id, -1, e); }
+    function galleryNext(id, e) { galleryGo(id,  1, e); }
 
     // ── Завантаження товарів ──────────────────
     async function loadProducts() {
@@ -700,6 +785,8 @@
         var res = await db.from('products').select('*').order('created_at', { ascending: false });
         if (res.error) throw res.error;
         PRODUCTS = (res.data || []).map(function(p) {
+          var fallback = 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&h=520&fit=crop';
+          var imgs = (p.images && p.images.length) ? p.images : (p.img ? [p.img] : [fallback]);
           return {
             id:       String(p.id),
             brand:    p.brand    || '',
@@ -709,7 +796,10 @@
             oldPrice: p.old_price ? Number(p.old_price) : null,
             type:     p.type     || 'stock',
             category: p.category || 'other',
-            img:      p.img      || 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&h=520&fit=crop'
+            gender:   p.gender   || 'unisex',
+            img:      imgs[0],
+            images:   imgs
+          };
           };
         });
       } catch(e) {
@@ -723,8 +813,11 @@
     function renderProducts() {
       var grid = document.getElementById('productsGrid');
       var list = PRODUCTS.filter(function(p) {
-        if (activeTab  !== 'all' && p.category !== activeTab)  return false;
-        if (activeType !== 'all' && p.type     !== activeType) return false;
+        if (activeTab    !== 'all' && p.category !== activeTab)    return false;
+        if (activeType   !== 'all' && p.type     !== activeType)   return false;
+        if (activeGender !== 'all' && p.gender   !== activeGender) return false;
+        if (priceMin !== null && p.price < priceMin) return false;
+        if (priceMax !== null && p.price > priceMax) return false;
         return true;
       });
 
@@ -748,11 +841,23 @@
           ? '<span class="price-old">' + p.oldPrice.toLocaleString('uk-UA') + '</span>'
           : '';
         var saleHtml = p.oldPrice ? '<span class="badge badge-sale">SALE</span>' : '';
-        return '<div class="product-card">' +
+        var hasMany = p.images && p.images.length > 1;
+        var dotsHtml = hasMany
+          ? '<div class="gallery-dots">' + p.images.map(function(_, i) {
+              return '<div class="gallery-dot' + (i===0?' active':'') + '"></div>';
+            }).join('') + '</div>'
+          : '';
+        var navHtml = hasMany
+          ? '<button class="gallery-nav gallery-prev" onclick="galleryPrev(\'' + p.id + '\',event)">‹</button>' +
+            '<button class="gallery-nav gallery-next" onclick="galleryNext(\'' + p.id + '\',event)">›</button>'
+          : '';
+        return '<div class="product-card" data-id="' + p.id + '">' +
           '<div class="card-badges"><span class="badge ' + b.cls + '">' + b.label + '</span>' + saleHtml + '</div>' +
           '<button class="card-wishlist ' + likedCls + '" onclick="toggleLike(\'' + p.id + '\',this)">' + heart + '</button>' +
           '<div class="card-img-wrap">' +
-            '<img class="product-image" src="' + p.img + '" alt="' + p.title + '" loading="lazy">' +
+            navHtml +
+            '<img class="product-image" id="img-' + p.id + '" src="' + p.img + '" alt="' + p.title + '" loading="lazy">' +
+            dotsHtml +
             '<button class="card-quick-view" onclick="addToCart(\'' + p.id + '\')">Додати в кошик</button>' +
           '</div>' +
           '<div class="product-info">' +
@@ -947,6 +1052,36 @@
     document.getElementById('sortSelect').onchange = function(e) {
       sortVal = e.target.value;
       renderProducts();
+    };
+
+    // ── Фільтр статі ─────────────────────────
+    document.querySelectorAll('#genderFilter button').forEach(function(btn) {
+      btn.onclick = function() {
+        document.querySelectorAll('#genderFilter button').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeGender = btn.dataset.gender;
+        renderProducts();
+      };
+    });
+
+    // ── Фільтр ціни ──────────────────────────
+    document.getElementById('applyFilter').onclick = function() {
+      var minVal = document.getElementById('priceMin').value;
+      var maxVal = document.getElementById('priceMax').value;
+      priceMin = minVal !== '' ? Number(minVal) : null;
+      priceMax = maxVal !== '' ? Number(maxVal) : null;
+      renderProducts();
+    };
+
+    // ── Темна тема ───────────────────────────
+    var isDark = localStorage.getItem('kadora-theme') === 'dark';
+    if (isDark) { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '☀️'; }
+
+    document.getElementById('themeBtn').onclick = function() {
+      isDark = !isDark;
+      document.body.classList.toggle('dark', isDark);
+      document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('kadora-theme', isDark ? 'dark' : 'light');
     };
 
     // ── Старт ────────────────────────────────

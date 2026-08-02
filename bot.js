@@ -101,15 +101,38 @@ bot.on('message', async (msg) => {
       await bot.sendMessage(chatId, '⏳ Завантажую фото...');
       try {
         const permanentUrl = await uploadPhotoToSupabase(fileId);
-        sessions[chatId].photoUrl = permanentUrl;
-        sessions[chatId].step = 'title';
-        return bot.sendMessage(chatId, '✅ Фото збережено!\n\n📝 Введи *назву товару*:', { parse_mode: 'Markdown', ...cancelKeyboard() });
+        if (!sessions[chatId].photos) sessions[chatId].photos = [];
+        sessions[chatId].photos.push(permanentUrl);
+        const count = sessions[chatId].photos.length;
+        if (count < 5) {
+          return bot.sendMessage(chatId,
+            `✅ Фото ${count} збережено!\n\nНадішли ще фото або натисни "➡️ Далі" (максимум 5)`,
+            {
+              reply_markup: {
+                keyboard: [['➡️ Далі'], ['❌ Скасувати']],
+                resize_keyboard: true,
+              }
+            }
+          );
+        } else {
+          sessions[chatId].step = 'title';
+          return bot.sendMessage(chatId, '✅ Всі 5 фото збережено!\n\n📝 Введи *назву товару*:', { parse_mode: 'Markdown', ...cancelKeyboard() });
+        }
       } catch (e) {
         console.error(e);
         return bot.sendMessage(chatId, '❌ Помилка завантаження фото. Спробуй ще раз.', cancelKeyboard());
       }
     }
-    return bot.sendMessage(chatId, '❗ Надішли саме *фото*, не файл.', { parse_mode: 'Markdown' });
+
+    if (text === '➡️ Далі') {
+      if (!sessions[chatId].photos || !sessions[chatId].photos.length) {
+        return bot.sendMessage(chatId, '❗ Спочатку надішли хоча б одне фото.');
+      }
+      sessions[chatId].step = 'title';
+      return bot.sendMessage(chatId, `✅ ${sessions[chatId].photos.length} фото збережено!\n\n📝 Введи *назву товару*:`, { parse_mode: 'Markdown', ...cancelKeyboard() });
+    }
+
+    return bot.sendMessage(chatId, '❗ Надішли *фото* товару (до 5 штук):', { parse_mode: 'Markdown' });
   }
 
   if (session.step === 'title' && text) {
@@ -178,13 +201,30 @@ bot.on('message', async (msg) => {
       "🧶 В'язаний": 'knitwear', '👜 Аксесуари': 'accessories',
     };
     const category = catMap[text] || 'other';
+    sessions[chatId].category = category;
+    sessions[chatId].step = 'gender';
+    return bot.sendMessage(chatId, '👤 Для кого товар?', {
+      reply_markup: {
+        keyboard: [['👩 Жіночий', '👨 Чоловічий', '👕 Унісекс'], ['❌ Скасувати']],
+        resize_keyboard: true,
+      },
+    });
+  }
+
+  if (session.step === 'gender' && text) {
+    const genderMap = { '👩 Жіночий': 'women', '👨 Чоловічий': 'men', '👕 Унісекс': 'unisex' };
+    const gender = genderMap[text];
+    if (!gender) return bot.sendMessage(chatId, '❗ Оберіть один із варіантів.');
+    sessions[chatId].gender = gender;
     const s = sessions[chatId];
     await bot.sendMessage(chatId, '⏳ Зберігаю товар...');
 
     const { error } = await supabase.from('products').insert([{
       title: s.title, brand: s.brand, price: s.price,
       old_price: s.oldPrice || null, size: s.size,
-      type: s.type, category, img: s.photoUrl,
+      type: s.type, category: s.category, gender: s.gender,
+      img: s.photos[0],
+      images: s.photos,
     }]);
 
     delete sessions[chatId];
@@ -195,7 +235,7 @@ bot.on('message', async (msg) => {
     }
 
     return bot.sendMessage(chatId,
-      `✅ *Товар додано!*\n\n📦 ${s.title}\n👗 ${s.brand} · ${s.size}\n💰 ${s.price} грн`,
+      `✅ *Товар додано!*\n\n📦 ${s.title}\n👗 ${s.brand} · ${s.size}\n💰 ${s.price} грн\n👤 ${text}`,
       { parse_mode: 'Markdown', ...mainMenu() }
     );
   }
